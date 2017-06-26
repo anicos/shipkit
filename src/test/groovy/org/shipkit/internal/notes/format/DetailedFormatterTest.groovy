@@ -10,7 +10,7 @@ import spock.lang.Specification
 
 class DetailedFormatterTest extends Specification {
 
-    def f = new DetailedFormatter("Release notes:\n\n", ["noteworthy": "Noteworthy", "bug": "Bugfixes"],
+    def f = new DetailedFormatter(enabledHeader, "Release notes:\n\n", ["noteworthy": "Noteworthy", "bug": "Bugfixes"],
             "http://commits/{0}...{1}", "Bintray", [:], false)
 
     def "no releases"() {

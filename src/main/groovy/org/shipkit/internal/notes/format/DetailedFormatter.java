@@ -21,9 +21,11 @@ class DetailedFormatter implements MultiReleaseNotesFormatter {
     private final String publicationRepository;
     private final Map<String, Contributor> contributors;
     private final boolean emphasizeVersion;
+    private final boolean enabledHeader;
 
-    DetailedFormatter(String introductionText, Map<String, String> labelMapping, String vcsCommitsLinkTemplate,
+    DetailedFormatter(boolean enabledHeader, String introductionText, Map<String, String> labelMapping, String vcsCommitsLinkTemplate,
                       String publicationRepository, Map<String, Contributor> contributors, boolean emphasizeVersion) {
+        this.enabledHeader = enabledHeader;
         this.introductionText = introductionText;
         this.labelMapping = labelMapping;
         this.vcsCommitsLinkTemplate = vcsCommitsLinkTemplate;

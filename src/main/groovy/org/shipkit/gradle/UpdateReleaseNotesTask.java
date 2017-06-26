@@ -47,6 +47,7 @@ public class UpdateReleaseNotesTask extends DefaultTask {
     private String version;
     private String tagPrefix;
     private boolean previewMode;
+    private boolean enableHeader;
 
     private IncrementalNotesGenerator incrementalNotesGenerator = new IncrementalNotesGenerator();
 
@@ -80,6 +81,13 @@ public class UpdateReleaseNotesTask extends DefaultTask {
         this.previewMode = previewMode;
     }
 
+    public boolean isEnableHeader() {
+        return enableHeader;
+    }
+
+    public void setEnableHeader(boolean enableHeader) {
+        this.enableHeader = enableHeader;
+    }
 
     /**
      * Release notes file this task operates on.
@@ -345,6 +353,7 @@ public class UpdateReleaseNotesTask extends DefaultTask {
         return out;
     }
 
+
     class IncrementalNotesGenerator {
         public String generateNewContent() {
             LOG.lifecycle("  Building new release notes based on {}", releaseNotesFile);
@@ -363,7 +372,7 @@ public class UpdateReleaseNotesTask extends DefaultTask {
             }
 
             Map<String, Contributor> contributorsMap = contributorsMap(contributors, contributorsFromGitHub, developers);
-            String notes = ReleaseNotesFormatters.detailedFormatter(
+            String notes = ReleaseNotesFormatters.detailedFormatter(enableHeader,
                     "", gitHubLabelMapping, vcsCommitTemplate, publicationRepository, contributorsMap, emphasizeVersion)
                     .formatReleaseNotes(data);
 

@@ -56,6 +56,7 @@ public class ReleaseConfiguration {
         gitHub.setWriteAuthUser("dummy");
 
         releaseNotes.setFile("docs/release-notes.md");
+        releaseNotes.setEnableHeader(Boolean.TRUE);
         releaseNotes.setIgnoreCommitsContaining(asList("[ci skip]"));
         releaseNotes.setLabelMapping(Collections.<String, String>emptyMap());
 
@@ -276,6 +277,14 @@ public class ReleaseConfiguration {
         public void setIgnoreCommitsContaining(Collection<String> commitMessageParts) {
             configuration.put("releaseNotes.ignoreCommitsContaining", commitMessageParts);
         }
+
+        public boolean isEnableHeader() {
+            return getBoolean("releaseNotes.enableHeader");
+        }
+
+        public void setEnableHeader(Boolean enableHeader) {
+            configuration.put("releaseNotes.enableHeader", enableHeader);
+        }
     }
 
     public class Git {
@@ -422,6 +431,10 @@ public class ReleaseConfiguration {
 
     private Collection<String> getCollection(String key) {
         return (Collection) getValue(key, "Please configure 'shipkit." + key + "' value (Collection).");
+    }
+
+    private Boolean getBoolean(String key) {
+        return (Boolean) getValue(key, "Please configure 'shipkit." + key + "' value (String).");
     }
 
     private Object getValue(String key, String message) {
