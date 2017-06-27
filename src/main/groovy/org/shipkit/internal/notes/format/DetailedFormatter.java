@@ -21,11 +21,11 @@ class DetailedFormatter implements MultiReleaseNotesFormatter {
     private final String publicationRepository;
     private final Map<String, Contributor> contributors;
     private final boolean emphasizeVersion;
-    private final boolean enabledHeader;
+    private final String informationAboutShipkit;
 
-    DetailedFormatter(boolean enabledHeader, String introductionText, Map<String, String> labelMapping, String vcsCommitsLinkTemplate,
+    DetailedFormatter(String informationAboutShipkit, String introductionText, Map<String, String> labelMapping, String vcsCommitsLinkTemplate,
                       String publicationRepository, Map<String, Contributor> contributors, boolean emphasizeVersion) {
-        this.enabledHeader = enabledHeader;
+        this.informationAboutShipkit = informationAboutShipkit;
         this.introductionText = introductionText;
         this.labelMapping = labelMapping;
         this.vcsCommitsLinkTemplate = vcsCommitsLinkTemplate;
@@ -36,7 +36,8 @@ class DetailedFormatter implements MultiReleaseNotesFormatter {
 
     @Override
     public String formatReleaseNotes(Collection<ReleaseNotesData> data) {
-        StringBuilder sb = new StringBuilder(introductionText == null ? "" : introductionText);
+        StringBuilder sb = new StringBuilder(informationAboutShipkit);
+        sb.append(introductionText == null ? "" : introductionText);
         if (data.isEmpty()) {
             sb.append("No release information.");
             return sb.toString();

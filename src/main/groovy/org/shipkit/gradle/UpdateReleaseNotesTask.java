@@ -10,6 +10,7 @@ import org.shipkit.internal.gradle.util.FileUtil;
 import org.shipkit.internal.gradle.util.ReleaseNotesSerializer;
 import org.shipkit.internal.gradle.util.team.TeamMember;
 import org.shipkit.internal.gradle.util.team.TeamParser;
+import org.shipkit.internal.notes.about.InformationAboutProvider;
 import org.shipkit.internal.notes.contributors.AllContributorsSerializer;
 import org.shipkit.internal.notes.contributors.DefaultContributor;
 import org.shipkit.internal.notes.contributors.DefaultProjectContributorsSet;
@@ -50,6 +51,8 @@ public class UpdateReleaseNotesTask extends DefaultTask {
     private boolean enableHeader;
 
     private IncrementalNotesGenerator incrementalNotesGenerator = new IncrementalNotesGenerator();
+    private InformationAboutProvider informationAboutProvider = new InformationAboutProvider();
+
 
     /**
      * Generates incremental release notes and appends it to the top of release notes file.
@@ -358,6 +361,8 @@ public class UpdateReleaseNotesTask extends DefaultTask {
         public String generateNewContent() {
             LOG.lifecycle("  Building new release notes based on {}", releaseNotesFile);
 
+            String infoText = informationAboutProvider.getInfoText(releaseNotesFile, enableHeader);
+
             Collection<ReleaseNotesData> data = new ReleaseNotesSerializer().deserialize(IOUtil.readFully(releaseNotesData));
 
             String vcsCommitTemplate = getVcsCommitTemplate();
@@ -372,8 +377,8 @@ public class UpdateReleaseNotesTask extends DefaultTask {
             }
 
             Map<String, Contributor> contributorsMap = contributorsMap(contributors, contributorsFromGitHub, developers);
-            String notes = ReleaseNotesFormatters.detailedFormatter(enableHeader,
-                    "", gitHubLabelMapping, vcsCommitTemplate, publicationRepository, contributorsMap, emphasizeVersion)
+            String notes = ReleaseNotesFormatters.detailedFormatter(
+                    infoText,"", gitHubLabelMapping, vcsCommitTemplate, publicationRepository, contributorsMap, emphasizeVersion)
                     .formatReleaseNotes(data);
 
             return notes + "\n\n";

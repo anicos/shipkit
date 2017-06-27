@@ -39,14 +39,14 @@ public class ReleaseNotesFormatters {
      * @param publicationRepository where the binaries were published to, will be printed as-is in the release notes
      * @param contributors mapped by name, used to generate links to GitHub profiles
      */
-    public static MultiReleaseNotesFormatter detailedFormatter(boolean enabledHeader,
+    public static MultiReleaseNotesFormatter detailedFormatter(String informationAboutShipkit,
                                                                String introductionText,
                                                                Map<String, String> labelMapping,
                                                                String vcsCommitsLinkTemplate,
                                                                String publicationRepository,
                                                                Map<String, Contributor> contributors,
                                                                boolean emphasizeVersion) {
-        return new DetailedFormatter(enabledHeader, introductionText, labelMapping, vcsCommitsLinkTemplate,
+        return new DetailedFormatter(informationAboutShipkit, introductionText, labelMapping, vcsCommitsLinkTemplate,
                 publicationRepository, contributors, emphasizeVersion);
     }
 }
