@@ -338,6 +338,11 @@ public class UpdateReleaseNotesTask extends DefaultTask {
         this.incrementalNotesGenerator = incrementalNotesGenerator;
     }
 
+    @ExposedForTesting
+    void setInfoAboutRemover(InfoAboutRemover infoAboutRemover){
+        this.infoAboutRemover = infoAboutRemover;
+    }
+
     //TODO SF deduplicate and unit test
     static Map<String, Contributor> contributorsMap(Collection<String> contributorsFromConfiguration,
                                                     ProjectContributorsSet contributorsFromGitHub,
@@ -364,7 +369,7 @@ public class UpdateReleaseNotesTask extends DefaultTask {
         public String generateNewContent() {
             LOG.lifecycle("  Building new release notes based on {}", releaseNotesFile);
 
-            String infoText = informationAboutProvider.getInfoText(releaseNotesFile, enableHeader);
+            String inforomationAboutText = informationAboutProvider.getInforomationAboutText(releaseNotesFile, enableHeader);
 
             Collection<ReleaseNotesData> data = new ReleaseNotesSerializer().deserialize(IOUtil.readFully(releaseNotesData));
 
@@ -381,7 +386,7 @@ public class UpdateReleaseNotesTask extends DefaultTask {
 
             Map<String, Contributor> contributorsMap = contributorsMap(contributors, contributorsFromGitHub, developers);
             String notes = ReleaseNotesFormatters.detailedFormatter(
-                    infoText,"", gitHubLabelMapping, vcsCommitTemplate, publicationRepository, contributorsMap, emphasizeVersion)
+                    inforomationAboutText,"", gitHubLabelMapping, vcsCommitTemplate, publicationRepository, contributorsMap, emphasizeVersion)
                     .formatReleaseNotes(data);
 
             return notes + "\n\n";

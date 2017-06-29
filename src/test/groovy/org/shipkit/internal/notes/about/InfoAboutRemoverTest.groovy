@@ -6,11 +6,24 @@ class InfoAboutRemoverTest extends Specification {
 
     InfoAboutRemover infoAboutRemover = new InfoAboutRemover();
 
-    def "should remove info when exist"() {
+    def "should remove about info when exist and it's commented"() {
         given:
         File releaseNoteFile = File.createTempFile("temp", ".tmp");
         releaseNoteFile.with {
-            write String.format(InformationAboutProvider.INFORMATION_ABOUT, 400) + "old content"
+            write InformationAboutProvider.getInformationAbout(400) + "old content"
+        }
+        when:
+        infoAboutRemover.removeAboutInfoIfExist(releaseNoteFile);
+
+        then:
+        releaseNoteFile.text == "old content"
+    }
+
+    def "should remove about info when exist and it's not commented"() {
+        given:
+        File releaseNoteFile = File.createTempFile("temp", ".tmp");
+        releaseNoteFile.with {
+            write InformationAboutProvider.getCommentedInformationAbout(400) + "old content"
         }
         when:
         infoAboutRemover.removeAboutInfoIfExist(releaseNoteFile);

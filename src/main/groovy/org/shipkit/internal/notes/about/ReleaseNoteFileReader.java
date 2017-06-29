@@ -1,6 +1,6 @@
 package org.shipkit.internal.notes.about;
 
-import java.io.*;
+import java.io.File;
 
 class ReleaseNoteFileReader {
 
@@ -12,7 +12,7 @@ class ReleaseNoteFileReader {
     }
 
     private String readFirstLine(BufferedReaderWrapper bufferedReader) {
-            String firstLine = bufferedReader.readLine();
-            return (firstLine == null) ? "" : firstLine;
+        String firstLine = bufferedReader.readLine();
+        return (firstLine == null) ? "" : firstLine;
     }
 }

@@ -5,9 +5,6 @@ import spock.lang.Unroll
 
 class CounterExtractorTest extends Specification {
 
-    final
-    static String INFORMATION_ABOUT_COMMENTED = InformationAboutProvider.COMMENT_START + InformationAboutProvider.INFORMATION_ABOUT + InformationAboutProvider.COMMENT_END;
-
     private final CounterExtractor testObj = new CounterExtractor()
 
     @Unroll
@@ -15,20 +12,27 @@ class CounterExtractorTest extends Specification {
         expect:
         testObj.getCounter(infoAbout) == result
         where:
-        infoAbout                                                     || result
-        String.format(InformationAboutProvider.INFORMATION_ABOUT, 2)  || 2
-        String.format(InformationAboutProvider.INFORMATION_ABOUT, 10) || 10
-        String.format(INFORMATION_ABOUT_COMMENTED, 123)               || 123
-        String.format(INFORMATION_ABOUT_COMMENTED, 4)                 || 4
-        ""                                                            || 0
-        "some content"                                                || 0
-        "some content with number 43 and 2323"                        || 0
+        infoAbout                                                  || result
+        InformationAboutProvider.getInformationAbout(2)            || 2
+        InformationAboutProvider.getInformationAbout(10)           || 10
+        InformationAboutProvider.getCommentedInformationAbout(123) || 123
+        InformationAboutProvider.getCommentedInformationAbout(4)   || 4
+        ""                                                         || 0
+        "some content"                                             || 0
+        "some content with number 43 and 2323"                     || 0
     }
-
 
     def "about info pattern should match to information about shipkit"() {
         when:
-        String infoAboutShipkit = String.format(InformationAboutProvider.INFORMATION_ABOUT, 300)
+        when:
+        String infoAboutShipkit = InformationAboutProvider.getInformationAbout(300)
+        then:
+        infoAboutShipkit.matches(CounterExtractor.ABOUT_INFO_PATTERN)
+    }
+
+    def "about info pattern should match to commented information about shipkit"() {
+        when:
+        String infoAboutShipkit = InformationAboutProvider.getCommentedInformationAbout(300)
         then:
         infoAboutShipkit.matches(CounterExtractor.ABOUT_INFO_PATTERN)
     }

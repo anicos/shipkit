@@ -22,8 +22,7 @@ public class InfoAboutRemover {
                 }
                 if (firstLine) {
                     firstLine = false;
-                }
-                else{
+                } else {
                     writer.write(System.getProperty("line.separator"));
                 }
                 writer.write(currentLine);
