@@ -10,6 +10,7 @@ import org.shipkit.internal.gradle.util.FileUtil;
 import org.shipkit.internal.gradle.util.ReleaseNotesSerializer;
 import org.shipkit.internal.gradle.util.team.TeamMember;
 import org.shipkit.internal.gradle.util.team.TeamParser;
+import org.shipkit.internal.notes.about.InfoAboutRemover;
 import org.shipkit.internal.notes.about.InformationAboutProvider;
 import org.shipkit.internal.notes.contributors.AllContributorsSerializer;
 import org.shipkit.internal.notes.contributors.DefaultContributor;
@@ -52,6 +53,7 @@ public class UpdateReleaseNotesTask extends DefaultTask {
 
     private IncrementalNotesGenerator incrementalNotesGenerator = new IncrementalNotesGenerator();
     private InformationAboutProvider informationAboutProvider = new InformationAboutProvider();
+    private InfoAboutRemover infoAboutRemover = new InfoAboutRemover();
 
 
     /**
@@ -65,6 +67,7 @@ public class UpdateReleaseNotesTask extends DefaultTask {
             LOG.lifecycle("  Preview of release notes update:\n" +
                     "  ----------------\n" + newContent + "----------------");
         } else{
+            infoAboutRemover.removeAboutInfoIfExist(getReleaseNotesFile());
             FileUtil.appendToTop(newContent, getReleaseNotesFile());
             LOG.lifecycle("  Successfully updated release notes!");
         }
