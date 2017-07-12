@@ -5,10 +5,13 @@ import org.shipkit.gradle.ReleaseConfiguration
 import org.shipkit.internal.gradle.util.team.TeamParser
 import spock.lang.Specification
 import spock.lang.Unroll
+import testutil.ReflectionUtil
+
+import java.lang.reflect.Method
 
 class ReleaseConfigurationTest extends Specification {
 
-    def conf = new ReleaseConfiguration()
+    static def conf = new ReleaseConfiguration()
 
     def "default values"() {
         conf.team.developers.empty
@@ -25,6 +28,31 @@ class ReleaseConfigurationTest extends Specification {
         expect:
         conf.git.commitMessagePostfix ==  " by CI build 1234 [ci skip-release]"
     }
+
+    def "customs commitMessagePostfix"() {
+        //TODO figure out a test that would validate all properties with reflection
+        //rather than implement individual unit test for each property (getter and setter)
+        conf.git.commitMessagePostfix = " by CI build 1234 [ci skip-release]"
+        ReflectionUtil.findGettersAndSetters(conf)
+        expect:
+        conf.git.commitMessagePostfix ==  " by CI build 1234 [ci skip-release]"
+    }
+
+    def "maximum of two numbers"(row,a,b,c) {
+        //def row =[]
+
+        expect:
+        Math.max(a, b) == c
+
+        where:
+        row << ReflectionUtil.findGettersAndSetters(conf)
+        a = row.setter
+        b = row.getter
+        c = row.object
+
+    }
+
+
 
     def "validates team members"() {
         when:
