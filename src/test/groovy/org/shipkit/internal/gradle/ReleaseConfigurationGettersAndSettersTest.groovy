@@ -21,45 +21,42 @@ class ReleaseConfigurationGettersAndSettersTest extends Specification {
     }
 
     @Unroll
-    def "maximum of two numbers"(row,Method setter,Method getter,c) {
-        def randomValue = getRandomValueForSetter(setter)
-
-        setter.invoke(c,randomValue)
+    def "setter #setter.name value should be the same like #getter.name"(row, Method setter, Method getter, Object obj) {
+        def valueForSetter = getValueForSetter(setter)
+        setter.invoke(obj, valueForSetter)
 
         expect:
-
-
-        getter.invoke(c) == randomValue
+        getter.invoke(obj) == valueForSetter
 
         where:
         row << ReflectionUtil.findGettersAndSetters(conf)
         setter = row.setter
         getter = row.getter
-        c = row.object
+        obj = row.object
 
     }
 
-    def getRandomValueForSetter(Method setter){
-        if (setter.parameters[0].type == String.class){
-            return "a"
+    def getValueForSetter(Method setter) {
+        if (setter.parameters[0].type == String.class) {
+            return "some string"
         }
 
         if (setter.parameters[0].type.name == "boolean") {
             return true;
         }
 
-        if (setter.parameters[0].type == Map.class){
+        if (setter.parameters[0].type == Map.class) {
             def emptyMap = [:]
-            emptyMap.put("a","a")
+            emptyMap.put("key", "value")
             return emptyMap
         }
 
-        if (setter.parameters[0].type == Collection.class){
-            def emptyMap = []
-            emptyMap<<"a"
-            return emptyMap
+        if (setter.parameters[0].type == Collection.class) {
+            def collection = []
+            collection << "anicos:Adrian Nicos"
+            return collection
         }
 
-        return "a"
+        throw new RuntimeException("Not supported field")
     }
 }

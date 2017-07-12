@@ -20,40 +20,6 @@ class ReleaseConfigurationTest extends Specification {
         conf.releaseNotes.ignoreCommitsContaining == ["[ci skip]"]
     }
 
-    def "custom commitMessagePostfix"() {
-        //TODO figure out a test that would validate all properties with reflection
-        //rather than implement individual unit test for each property (getter and setter)
-        conf.git.commitMessagePostfix = " by CI build 1234 [ci skip-release]"
-
-        expect:
-        conf.git.commitMessagePostfix ==  " by CI build 1234 [ci skip-release]"
-    }
-
-    def "customs commitMessagePostfix"() {
-        //TODO figure out a test that would validate all properties with reflection
-        //rather than implement individual unit test for each property (getter and setter)
-        conf.git.commitMessagePostfix = " by CI build 1234 [ci skip-release]"
-        ReflectionUtil.findGettersAndSetters(conf)
-        expect:
-        conf.git.commitMessagePostfix ==  " by CI build 1234 [ci skip-release]"
-    }
-
-    def "maximum of two numbers"(row,a,b,c) {
-        //def row =[]
-
-        expect:
-        Math.max(a, b) == c
-
-        where:
-        row << ReflectionUtil.findGettersAndSetters(conf)
-        a = row.setter
-        b = row.getter
-        c = row.object
-
-    }
-
-
-
     def "validates team members"() {
         when:
         conf.team.developers = []

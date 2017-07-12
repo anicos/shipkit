@@ -4,7 +4,7 @@ import java.lang.reflect.Method
 
 class ReflectionUtil {
 
-    static List<Value> findGettersAndSetters(obj) {
+    static List<ObjectWithProperties> findGettersAndSetters(obj) {
         def gettersAndSettersList = []
         def parentList = []
         parentList << obj.class
@@ -19,7 +19,7 @@ class ReflectionUtil {
             if (isGetter(method)) {
                 def setter = findSetterForGetter(obj, method)
                 if (setter != null) {
-                    myList << new Value(method, setter, obj)
+                    myList << new ObjectWithProperties(method, setter, obj)
                 } else {
                     def getterResult = method.invoke(obj)
                     //Protection against cyclic dependencies
@@ -36,7 +36,7 @@ class ReflectionUtil {
         def methods = object.class.declaredMethods
         for (it in methods) {
             def fieldName = it.name.substring(3)
-            if (isSetter(it) && getter.name.endsWith(fieldName)) {
+            if (isSetter(it) && getter.name.endsWith(fieldName) && getter.name.length() <= it.name.length()) {
                 return it;
             }
         }
@@ -60,12 +60,12 @@ class ReflectionUtil {
         return true;
     }
 
-    static class Value {
+    static class ObjectWithProperties {
         Method getter;
         Method setter;
         Object object;
 
-        Value(Method getter, Method setter, Object object) {
+        ObjectWithProperties(Method getter, Method setter, Object object) {
             this.getter = getter
             this.setter = setter
             this.object = object
@@ -87,7 +87,7 @@ class ReflectionUtil {
             if (this.is(o)) return true
             if (getClass() != o.class) return false
 
-            Value value = (Value) o
+            ObjectWithProperties value = (ObjectWithProperties) o
 
             if (getter != value.getter) return false
             if (object != value.object) return false
